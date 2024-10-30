@@ -6,23 +6,26 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const rootDir = join(__dirname, '../')
 
 const formatDate = (date) => {
-  return date.toISOString().split('T')[0].replace(/-/g, '-').slice(2)
+  return new Date(date.getTime() + 9 * 60 * 60 * 1000).toISOString().split('T')[0]
 }
 
 const createPost = (issueNumber, title, tags = '', summary = '', authors = []) => {
   const date = formatDate(new Date())
   const tagList = tags
     .split(',')
-    .map((tag) => tag.trim())
+    .map((tag) => `'${tag.trim()}'`)
     .join(', ')
-  const authorList = authors.length > 0 ? 'default' + authors.join(', ') : 'default'
+  const authorList =
+    authors.length > 0
+      ? `['default', ${authors.map((author) => `'${author.trim()}'`).join(', ')}]`
+      : `['default']`
 
   const content = `---
-title: "${title}"
-date: "${date}"
-lastmod: "${date}"
+title: '${title}'
+date: '${date}'
+lastmod: '${date}'
 tags: [${tagList}]
-summary: "${summary}"
+summary: '${summary}'
 authors: [${authorList}]
 draft: false
 ---
