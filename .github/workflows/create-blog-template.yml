@@ -17,8 +17,7 @@ jobs:
         id: issue-parser
         uses: stefanbuck/github-issue-parser@v3
         with:
-          issue-number: ${{ github.event.issue.number }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          template-path: .github/ISSUE_TEMPLATE/blog_post_template.yml
 
       - name: Output parsed issue
         run: |
