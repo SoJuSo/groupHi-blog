@@ -21,7 +21,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create branch for issue
-        if: ${{ steps.issue-parser.outputs.is_new == '예' }}
+        if: ${{ steps.issue-parser.outputs.issueparser_is_new == '예' }}
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
@@ -29,26 +29,26 @@ jobs:
           git checkout -b "$BRANCH_NAME"
 
       - name: Output parsed issue
-        if: ${{ steps.issue-parser.outputs.is_new == '예' }}
+        if: ${{ steps.issue-parser.outputs.issueparser_is_new == '예' }}
         run: |
-          echo "Parsed Title: ${{ steps.issue-parser.outputs.title }}"
-          echo "Parsed Tags: ${{ steps.issue-parser.outputs.tags }}"
-          echo "Parsed Summary: ${{ steps.issue-parser.outputs.summary }}"
-          echo "Parsed Authors: ${{ steps.issue-parser.outputs.authors }}"
+          echo "Parsed Title: ${{ steps.issue-parser.outputs.issueparser_title }}"
+          echo "Parsed Tags: ${{ steps.issue-parser.outputs.issueparser_tags }}"
+          echo "Parsed Summary: ${{ steps.issue-parser.outputs.issueparser_summary }}"
+          echo "Parsed Authors: ${{ steps.issue-parser.outputs.issueparser_authors }}"
 
       - name: Run create-post script
-        if: ${{ steps.issue-parser.outputs.is_new == '예' }}
+        if: ${{ steps.issue-parser.outputs.issueparser_is_new == '예' }}
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          ISSUE_TITLE: ${{ steps.issue-parser.outputs.title }}
-          ISSUE_TAGS: ${{ steps.issue-parser.outputs.tags }}
-          ISSUE_SUMMARY: ${{ steps.issue-parser.outputs.summary }}
-          ISSUE_AUTHORS: ${{ steps.issue-parser.outputs.authors }}
+          ISSUE_TITLE: ${{ steps.issue-parser.outputs.issueparser_title }}
+          ISSUE_TAGS: ${{ steps.issue-parser.outputs.issueparser_tags }}
+          ISSUE_SUMMARY: ${{ steps.issue-parser.outputs.issueparser_summary }}
+          ISSUE_AUTHORS: ${{ steps.issue-parser.outputs.issueparser_authors }}
         run: |
           node ./scripts/create-post.mjs "${ISSUE_NUMBER}" "${ISSUE_TITLE}" "${ISSUE_TAGS}" "${ISSUE_SUMMARY}" "${ISSUE_AUTHORS}"
 
       - name: Commit and push changes
-        if: ${{ steps.issue-parser.outputs.is_new == '예' }}
+        if: ${{ steps.issue-parser.outputs.issueparser_is_new == '예' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
