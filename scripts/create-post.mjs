@@ -3,7 +3,7 @@ import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const rootDir = join(__dirname, '../../')
+const rootDir = join(__dirname, '../')
 
 const formatDate = (date) => {
   return date.toISOString().split('T')[0].replace(/-/g, '-').slice(2)
