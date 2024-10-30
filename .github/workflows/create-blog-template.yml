@@ -57,6 +57,7 @@ jobs:
       - name: Commit and push changes
         if: ${{ steps.issue-parser.outputs.issueparser_is_new_post == '예' }}
         env:
+          BRANCH_NAME: 'blog-${{ github.event.issue.number }}'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"

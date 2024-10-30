@@ -47,7 +47,7 @@ Write your content here.
   }
 
   const slug = `${issueNumber}th-blog`
-  const filePath = join(blogDir, `${slug}.md`)
+  const filePath = join(blogDir, `${slug}.mdx`)
 
   writeFileSync(filePath, content, 'utf8')
   console.log(`Created new post: ${filePath}`)
