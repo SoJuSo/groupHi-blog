@@ -36,3 +36,12 @@ body:
         - leehanna
         - shinsuyoung
       multiple: true
+
+  - type: dropdown
+    id: is_new_post
+    attributes:
+      label: '신규 생성 여부'
+      description: '신규 생성 글인지 확인해주세요.'
+      options:
+        - 예
+        - 아니오
