@@ -7,7 +7,7 @@ on:
 jobs:
   create_content_template:
     runs-on: ubuntu-latest
-    if: "contains(toJSON(github.event.issue.body), '신규 생성 여부: 예')"
+    # if: "contains(toJSON(github.event.issue.body), '신규 생성 여부: 예')"
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
