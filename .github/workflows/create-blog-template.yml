@@ -14,14 +14,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: npm install
-
       - name: Create branch for issue
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -29,13 +21,26 @@ jobs:
           BRANCH_NAME="blog-${ISSUE_NUMBER}"
           git checkout -b "$BRANCH_NAME"
 
+      - name: Parse issue body
+        id: issue-parser
+        uses: zentered/issue-forms-body-parser@v2.0.0
+        with:
+          issue-form-body: '${{ github.event.issue.body }}'
+
+      - name: Output parsed issue
+        run: |
+          echo "Parsed Title: ${{ steps.issue-parser.outputs.title }}"
+          echo "Parsed Tags: ${{ steps.issue-parser.outputs.tags }}"
+          echo "Parsed Summary: ${{ steps.issue-parser.outputs.summary }}"
+          echo "Parsed Authors: ${{ steps.issue-parser.outputs.authors }}"
+
       - name: Run create-post script
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          ISSUE_TITLE: ${{ github.event.issue.title }}
-          ISSUE_TAGS: "${{ github.event.issue.body.match(/태그: (.+)/)[1] || '' }}"
-          ISSUE_SUMMARY: "${{ github.event.issue.body.match(/요약: (.+)/)[1] || '' }}"
-          ISSUE_AUTHORS: "${{ github.event.issue.body.match(/작성자: (.+)/)[1] || '' }}"
+          ISSUE_TITLE: ${{ steps.issue-parser.outputs.title }}
+          ISSUE_TAGS: ${{ steps.issue-parser.outputs.tags }}
+          ISSUE_SUMMARY: ${{ steps.issue-parser.outputs.summary }}
+          ISSUE_AUTHORS: ${{ steps.issue-parser.outputs.authors }}
         run: |
           node create-post.mjs "${ISSUE_NUMBER}" "${ISSUE_TITLE}" "${ISSUE_TAGS}" "${ISSUE_SUMMARY}" "${ISSUE_AUTHORS}"
 
