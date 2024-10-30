@@ -6,8 +6,8 @@ const siteMetadata = {
   description: '그루파이 서비스를 만들며 발생하는 다양한 이야기를 기록하고 공유합니다.',
   language: 'ko-kr',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://groupHi.vercel.app',
-  siteRepo: 'https://github.com/Team-groupHi',
+  siteUrl: 'https://blog.grouphi.kr',
+  siteRepo: 'https://github.com/Team-groupHi/groupHi-blog',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
   socialBanner: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
   // mastodon: 'https://mastodon.social/@mastodonuser',
