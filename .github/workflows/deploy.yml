@@ -10,6 +10,7 @@ on:
 
 jobs:
   sync:
+    if: github.repository == 'Team-groupHi/groupHi-blog'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Fork Repository
@@ -35,6 +36,4 @@ jobs:
 
       - name: Push Changes
         run: |
-          git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          git push https://sojuso:${{ secrets.ACCESS_TOKEN }}@github.com/sojuso/groupHi-blog.git main
