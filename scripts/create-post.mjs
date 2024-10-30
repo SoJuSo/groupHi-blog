@@ -1,11 +1,14 @@
-import { writeFileSync } from 'fs'
-import { join } from 'path'
+import { writeFileSync, existsSync, mkdirSync } from 'fs'
+import { join, dirname } from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const formatDate = (date) => {
   return date.toISOString().split('T')[0].replace(/-/g, '-').slice(2)
 }
 
-const createPost = (title, tags = '', summary = '', authors = []) => {
+const createPost = (issueNumber, title, tags = '', summary = '', authors = []) => {
   const date = formatDate(new Date())
   const tagList = tags
     .split(',')
@@ -40,7 +43,7 @@ Write your content here.
     console.error('이미 폴더가 존재합니다!!')
   }
 
-  const slug = `${issueNumber})${title.toLowerCase().replace(/ /g, '-')}`
+  const slug = `${issueNumber}-${title.toLowerCase().replace(/ /g, '-')}`
   const filePath = join(blogDir, `${slug}.md`)
 
   writeFileSync(filePath, content, 'utf8')
@@ -48,9 +51,10 @@ Write your content here.
 }
 
 const args = process.argv.slice(2)
-const [title, tags, summary, ...authors] = args
-if (title) {
-  createPost(title, tags, summary, authors)
+console.log(args)
+const [issueNumber, title, tags, summary, ...authors] = args
+if (issueNumber && title) {
+  createPost(issueNumber, title, tags, summary, authors)
 } else {
-  console.error('Please provide a post title.')
+  console.error('Please provide both an issue number and a post title.')
 }
