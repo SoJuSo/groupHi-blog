@@ -42,7 +42,7 @@ jobs:
           ISSUE_SUMMARY: ${{ steps.issue-parser.outputs.summary }}
           ISSUE_AUTHORS: ${{ steps.issue-parser.outputs.authors }}
         run: |
-          node create-post.mjs "${ISSUE_NUMBER}" "${ISSUE_TITLE}" "${ISSUE_TAGS}" "${ISSUE_SUMMARY}" "${ISSUE_AUTHORS}"
+          node ./scripts/create-post.mjs "${ISSUE_NUMBER}" "${ISSUE_TITLE}" "${ISSUE_TAGS}" "${ISSUE_SUMMARY}" "${ISSUE_AUTHORS}"
 
       - name: Commit and push changes
         env:
