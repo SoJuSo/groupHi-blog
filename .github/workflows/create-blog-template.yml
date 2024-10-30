@@ -7,27 +7,29 @@ on:
 jobs:
   create_content_template:
     runs-on: ubuntu-latest
-    # if: "contains(toJSON(github.event.issue.body), '신규 생성 여부: 예')"
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Parse issue body
+        id: issue-parser
+        uses: stefanbuck/github-issue-parser@v3
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create branch for issue
+        if: ${{ steps.issue-parser.outputs.is_new == '예' }}
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           BRANCH_NAME="blog-${ISSUE_NUMBER}"
           git checkout -b "$BRANCH_NAME"
 
-      - name: Parse issue body
-        id: issue-parser
-        uses: zentered/issue-forms-body-parser@v2.0.0
-        with:
-          issue-form-body: '${{ github.event.issue.body }}'
-
       - name: Output parsed issue
+        if: ${{ steps.issue-parser.outputs.is_new == '예' }}
         run: |
           echo "Parsed Title: ${{ steps.issue-parser.outputs.title }}"
           echo "Parsed Tags: ${{ steps.issue-parser.outputs.tags }}"
@@ -35,6 +37,7 @@ jobs:
           echo "Parsed Authors: ${{ steps.issue-parser.outputs.authors }}"
 
       - name: Run create-post script
+        if: ${{ steps.issue-parser.outputs.is_new == '예' }}
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_TITLE: ${{ steps.issue-parser.outputs.title }}
@@ -45,6 +48,7 @@ jobs:
           node ./scripts/create-post.mjs "${ISSUE_NUMBER}" "${ISSUE_TITLE}" "${ISSUE_TAGS}" "${ISSUE_SUMMARY}" "${ISSUE_AUTHORS}"
 
       - name: Commit and push changes
+        if: ${{ steps.issue-parser.outputs.is_new == '예' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
