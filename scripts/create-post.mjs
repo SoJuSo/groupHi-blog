@@ -46,7 +46,16 @@ Write your content here.
     console.error('이미 폴더가 존재합니다!!')
   }
 
-  const slug = `${issueNumber}-${title.toLowerCase().replace(/ /g, '-')}`
+  const slugify = (text) =>
+    text
+      .toString()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9 ]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+
+  const slug = `${issueNumber}-${slugify(title)}`
   const filePath = join(blogDir, `${slug}.md`)
 
   writeFileSync(filePath, content, 'utf8')
