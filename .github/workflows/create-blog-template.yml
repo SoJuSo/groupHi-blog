@@ -1,0 +1,50 @@
+name: Create Blog Template by Issue
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  create_content_template:
+    runs-on: ubuntu-latest
+    if: "contains(github.event.issue.body, '신규 생성 여부: 예')"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create branch for issue
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          BRANCH_NAME="blog-${ISSUE_NUMBER}"
+          git checkout -b "$BRANCH_NAME"
+
+      - name: Run create-post script
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_TAGS: "${{ github.event.issue.body.match(/태그: (.+)/)[1] || '' }}"
+          ISSUE_SUMMARY: "${{ github.event.issue.body.match(/요약: (.+)/)[1] || '' }}"
+          ISSUE_AUTHORS: "${{ github.event.issue.body.match(/작성자: (.+)/)[1] || '' }}"
+        run: |
+          node create-post.mjs "${ISSUE_NUMBER}" "${ISSUE_TITLE}" "${ISSUE_TAGS}" "${ISSUE_SUMMARY}" "${ISSUE_AUTHORS}"
+
+      - name: Commit and push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/blog/
+          git commit -m "Add new content template for issue #${{ github.event.issue.number }}"
+          git push origin "$BRANCH_NAME"
