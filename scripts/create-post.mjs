@@ -3,6 +3,7 @@ import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
+const rootDir = join(__dirname, '../../')
 
 const formatDate = (date) => {
   return date.toISOString().split('T')[0].replace(/-/g, '-').slice(2)
@@ -29,15 +30,13 @@ draft: false
 Write your content here.
 `
 
-  const blogDir = join(__dirname, 'data', 'blog')
-  console.log(blogDir)
+  const blogDir = join(rootDir, 'data', 'blog')
   if (!existsSync(blogDir)) {
     console.error("Error: 'data/blog' 폴더가 존재하지 않습니다!")
     process.exit(1)
   }
 
-  const staticDir = join(__dirname, 'public', 'static', 'blogs', issueNumber)
-  console.log(staticDir)
+  const staticDir = join(rootDir, 'public', 'static', 'blogs', issueNumber)
   if (!existsSync(staticDir)) {
     mkdirSync(staticDir, { recursive: true })
     console.log(`Created directory: ${staticDir}`)
@@ -53,7 +52,6 @@ Write your content here.
 }
 
 const args = process.argv.slice(2)
-console.log(args)
 const [issueNumber, title, tags, summary, ...authors] = args
 if (issueNumber && title) {
   createPost(issueNumber, title, tags, summary, authors)
