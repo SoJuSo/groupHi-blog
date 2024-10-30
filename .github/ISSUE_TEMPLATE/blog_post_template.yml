@@ -1,6 +1,6 @@
 name: Blog Post Creation
-description: '블로그 게시물 작성 시 필요한 정보를 입력하세요.'
-title: '[Blog] 블로그 제목을 입력하세요'
+description: '블로그 게시물 작성 시 필요한 정보를 입력하세요. 괄호 사용은 지양해주세요.'
+title: '[Blog] 블로그 제목을 입력하세요.'
 labels: ['blog', 'content']
 assignees: ['sojuso']
 
