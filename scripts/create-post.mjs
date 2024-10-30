@@ -31,12 +31,14 @@ Write your content here.
 `
 
   const blogDir = join(rootDir, 'data', 'blog')
+  console.log(blogDir)
   if (!existsSync(blogDir)) {
     console.error("Error: 'data/blog' 폴더가 존재하지 않습니다!")
     process.exit(1)
   }
 
   const staticDir = join(rootDir, 'public', 'static', 'blogs', issueNumber)
+  console.log(staticDir)
   if (!existsSync(staticDir)) {
     mkdirSync(staticDir, { recursive: true })
     console.log(`Created directory: ${staticDir}`)
