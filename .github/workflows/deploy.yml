@@ -34,6 +34,10 @@ jobs:
           git checkout main
           git merge upstream/main
 
+      - name: Pull Changes Before Pushing
+        run: |
+          git pull --rebase origin main
+
       - name: Push Changes
         run: |
           git push https://sojuso:${{ secrets.ACCESS_TOKEN }}@github.com/sojuso/groupHi-blog.git main
