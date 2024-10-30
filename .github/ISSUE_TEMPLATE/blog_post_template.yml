@@ -1,0 +1,41 @@
+name: 블로그 포스트 생성
+description: 블로그 게시물 작성 시 필요한 정보를 입력하세요.
+title: '[Blog] 블로그 제목을 입력하세요'
+
+body:
+  - type: input
+    id: title
+    attributes:
+      label: 제목 (required)
+      description: 블로그 제목을 입력하세요.
+      placeholder: '블로그 제목을 입력하세요'
+      required: true
+
+  - type: input
+    id: tags
+    attributes:
+      label: 태그 (optional)
+      description: 쉼표로 구분된 태그 목록을 입력하세요.
+      placeholder: '예: tech, javascript, openai'
+      required: false
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: 요약 (optional)
+      description: 이 게시물의 요약을 작성하세요.
+      placeholder: '블로그 게시물의 요약을 입력하세요'
+      required: false
+
+  - type: dropdown
+    id: authors
+    attributes:
+      label: 작성자 (optional)
+      description: 작성자를 선택하세요.
+      options:
+        - kimhyunjoo
+        - kimseokju
+        - leehanna
+        - shinsuyoung
+      multiple: true
+      required: true
