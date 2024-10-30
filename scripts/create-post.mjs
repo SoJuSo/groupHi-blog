@@ -44,6 +44,9 @@ Write your content here.
   console.log(staticDir)
   if (!existsSync(staticDir)) {
     mkdirSync(staticDir, { recursive: true })
+    const emptyFilePath = join(staticDir, `${issueNumber}.md`)
+    writeFileSync(emptyFilePath, '', 'utf8')
+    console.log(`Created empty file: ${emptyFilePath}`)
     console.log(`Created directory: ${staticDir}`)
   } else {
     console.error('이미 폴더가 존재합니다!!')
