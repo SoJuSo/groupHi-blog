@@ -1,4 +1,4 @@
-import { writeFileSync, existsSync, mkdirSync } from 'fs'
+import { writeFileSync, existsSync, mkdirSync, chmodSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -26,42 +26,65 @@ date: '${date}'
 lastmod: '${date}'
 tags: [${tagList}]
 summary: '${summary}'
-authors: [${authorList}]
+authors: ${authorList}
 draft: false
 ---
 
 Write your content here.
 `
 
+  // blog 디렉토리 설정 및 생성
   const blogDir = join(rootDir, 'data', 'blog')
-  console.log(blogDir)
   if (!existsSync(blogDir)) {
-    console.error("Error: 'data/blog' 폴더가 존재하지 않습니다!")
-    process.exit(1)
+    try {
+      mkdirSync(blogDir, { recursive: true })
+      chmodSync(blogDir, 0o755)
+      console.log(`Created blog directory: ${blogDir}`)
+    } catch (error) {
+      console.error(`Failed to create blog directory: ${error.message}`)
+      process.exit(1)
+    }
   }
 
   const staticDir = join(rootDir, 'public', 'static', 'blogs')
   if (!existsSync(staticDir)) {
-    mkdirSync(staticDir, { recursive: true })
-    console.log(`Created blogs directory: ${staticDir}`)
+    try {
+      mkdirSync(staticDir, { recursive: true })
+      chmodSync(staticDir, 0o755)
+      console.log(`Created blogs directory: ${staticDir}`)
+    } catch (error) {
+      console.error(`Failed to create blogs directory: ${error.message}`)
+      process.exit(1)
+    }
   }
 
   const issueDir = join(staticDir, issueNumber.toString())
   if (!existsSync(issueDir)) {
-    mkdirSync(issueDir, { recursive: true })
-    console.log(`Created issue directory: ${issueDir}`)
-    const emptyFilePath = join(issueDir, `${issueNumber}.md`)
-    writeFileSync(emptyFilePath, '', 'utf8')
-    console.log(`Created empty file: ${emptyFilePath}`)
+    try {
+      mkdirSync(issueDir, { recursive: true })
+      chmodSync(issueDir, 0o755)
+      const emptyFilePath = join(issueDir, `${issueNumber}.md`)
+      writeFileSync(emptyFilePath, `${issueNumber}에 대한 사진 저장 경로`, 'utf8')
+      chmodSync(emptyFilePath, 0o644)
+      console.log(`Created empty file: ${emptyFilePath}`)
+    } catch (error) {
+      console.error(`Failed to create issue directory or file: ${error.message}`)
+      process.exit(1)
+    }
   } else {
     console.error('Issue directory already exists!')
   }
 
   const slug = `${issueNumber}th-blog`
   const filePath = join(blogDir, `${slug}.mdx`)
-
-  writeFileSync(filePath, content, 'utf8')
-  console.log(`Created new post: ${filePath}`)
+  try {
+    writeFileSync(filePath, content, 'utf8')
+    chmodSync(filePath, 0o644)
+    console.log(`Created new post: ${filePath}`)
+  } catch (error) {
+    console.error(`Failed to create post file: ${error.message}`)
+    process.exit(1)
+  }
 }
 
 const args = process.argv.slice(2)
