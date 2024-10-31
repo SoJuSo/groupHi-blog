@@ -40,16 +40,21 @@ Write your content here.
     process.exit(1)
   }
 
-  const staticDir = join(rootDir, 'public', 'static', 'blogs', issueNumber)
-  console.log(staticDir)
+  const staticDir = join(rootDir, 'public', 'static', 'blogs')
   if (!existsSync(staticDir)) {
     mkdirSync(staticDir, { recursive: true })
-    const emptyFilePath = join(staticDir, `${issueNumber}.md`)
+    console.log(`Created blogs directory: ${staticDir}`)
+  }
+
+  const issueDir = join(staticDir, issueNumber.toString())
+  if (!existsSync(issueDir)) {
+    mkdirSync(issueDir, { recursive: true })
+    console.log(`Created issue directory: ${issueDir}`)
+    const emptyFilePath = join(issueDir, `${issueNumber}.md`)
     writeFileSync(emptyFilePath, '', 'utf8')
     console.log(`Created empty file: ${emptyFilePath}`)
-    console.log(`Created directory: ${staticDir}`)
   } else {
-    console.error('이미 폴더가 존재합니다!!')
+    console.error('Issue directory already exists!')
   }
 
   const slug = `${issueNumber}th-blog`
